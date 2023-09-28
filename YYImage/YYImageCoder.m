@@ -405,7 +405,7 @@ static yy_png_info *yy_png_info_create(const uint8_t *data, uint32_t length) {
     if (*((uint32_t *)(data + 4)) != YY_FOUR_CC(0x0D, 0x0A, 0x1A, 0x0A)) return NULL;
     
     uint32_t chunk_realloc_num = 16;
-    yy_png_chunk_info *chunks = malloc(sizeof(yy_png_chunk_info) * chunk_realloc_num);
+    yy_png_chunk_info *chunks = calloc(1, sizeof(yy_png_chunk_info) * chunk_realloc_num);
     if (!chunks) return NULL;
     
     // parse png chunks
@@ -578,7 +578,7 @@ static uint8_t *yy_png_copy_frame_data_at_index(const uint8_t *data,
     if (!(info->apng_first_frame_is_cover && index == 0)) {
         frame_remux_size -= frame_info->chunk_num * 4; // remove fdAT sequence number
     }
-    uint8_t *frame_data = malloc(frame_remux_size);
+    uint8_t *frame_data = calloc(1, frame_remux_size);
     if (!frame_data) return NULL;
     *size = frame_remux_size;
     
@@ -672,7 +672,7 @@ BOOL YYCGColorSpaceIsDeviceGray(CGColorSpaceRef space) {
  
  Example:
  
- void *data = malloc(size);
+ void *data = calloc(1, size);
  CGDataProviderRef provider = CGDataProviderCreateWithData(data, data, size, YYCGDataProviderReleaseDataCallback);
  */
 static void YYCGDataProviderReleaseDataCallback(void *info, const void *data, size_t size) {
@@ -831,7 +831,7 @@ static BOOL YYCGImageDecodeToBitmapBufferWith32BitFormat(CGImageRef srcImage, vI
     void *data = CGBitmapContextGetData(context);
     if (length == 0 || !data) goto fail;
     
-    dest->data = malloc(length);
+    dest->data = calloc(1, length);
     dest->width = width;
     dest->height = height;
     dest->rowBytes = bytesPerRow;
@@ -928,7 +928,7 @@ CGImageRef YYCGImageCreateAffineTransformCopy(CGImageRef imageRef, CGAffineTrans
     if(!YYCGImageDecodeToBitmapBufferWith32BitFormat(imageRef, &src, kCGImageAlphaFirst | kCGBitmapByteOrderDefault)) return NULL;
     
     size_t destBytesPerRow = YYImageByteAlign(destWidth * 4, 32);
-    tmp.data = malloc(destHeight * destBytesPerRow);
+    tmp.data = calloc(1, destHeight * destBytesPerRow);
     if (!tmp.data) goto fail;
     
     tmp.width = destWidth;
